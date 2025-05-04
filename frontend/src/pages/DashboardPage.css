@@ -1,0 +1,137 @@
+/* General styling */
+.dashboard {
+  font-family: Arial, sans-serif;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #333;
+  color: white;
+}
+
+.navbar-left {
+  display: flex;
+  gap: 20px;
+}
+
+.navbar-link {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar-logo {
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.navbar-right {
+  display: flex;
+  gap: 10px;
+}
+
+.navbar-logout {
+  background-color: #f44336;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.navbar-logout:hover {
+  background-color: #d32f2f;
+}
+
+/* Image Carousel */
+.carousel {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel img {
+  width: 100%;
+  height: auto;
+  transition: transform 0.5s ease;
+}
+
+/* Product Cards */
+.product-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.product-card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.product-card h3 {
+  margin-top: 10px;
+}
+
+.product-card button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.product-card button:hover {
+  background-color: #45a049;
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+  .navbar-left {
+    display: none; /* Hide the navbar links on small screens */
+  }
+
+  .navbar-right {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+    font-size: 30px;
+    cursor: pointer;
+  }
+
+  .navbar-expanded {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #333;
+    height: 100%;
+    flex-direction: column;
+    padding: 20px;
+    width: 250px;
+  }
+
+  .navbar-expanded a {
+    color: white;
+    text-decoration: none;
+    margin: 10px 0;
+  }
+
+  .navbar-expanded button {
+    margin-top: 20px;
+  }
+}

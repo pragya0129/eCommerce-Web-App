@@ -18,7 +18,7 @@ const LoginPage = () => {
         }
       );
       localStorage.setItem("userInfo", JSON.stringify(data));
-      navigate("/");
+      navigate("/dashboard");
     } catch (err) {
       alert("Login failed: " + err.response.data.message);
     }
