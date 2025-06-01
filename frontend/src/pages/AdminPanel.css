@@ -1,0 +1,80 @@
+.admin-panel {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  text-align: center;
+}
+
+.admin-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.admin-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  color: white;
+}
+
+.admin-btn.add {
+  background-color: #4caf50;
+}
+
+.admin-btn.delete {
+  background-color: #f44336;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal input {
+  padding: 10px;
+  font-size: 14px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  color: white;
+  border-radius: 5px;
+}
+
+.modal-buttons button:first-child {
+  background-color: #4caf50;
+}
+
+.modal-buttons button:last-child {
+  background-color: #f44336;
+}

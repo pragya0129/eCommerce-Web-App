@@ -17,10 +17,19 @@ const LoginPage = () => {
           password,
         }
       );
+      console.log(data);
+
+      // Save user info to localStorage
       localStorage.setItem("userInfo", JSON.stringify(data));
-      navigate("/dashboard");
+
+      // Redirect based on admin status
+      if (data.isAdmin) {
+        navigate("/adminpanel");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err) {
-      alert("Login failed: " + err.response.data.message);
+      alert("Login failed: " + (err.response?.data?.message || err.message));
     }
   };
 

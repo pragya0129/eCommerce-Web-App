@@ -1,104 +1,77 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./DashboardPage.css";
+import Navbar from "../components/Navbar";
+import axios from "axios";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 
 const DashboardPage = () => {
-  const [isNavbarExpanded, setNavbarExpanded] = useState(false);
+  const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
-  // Toggle Navbar
-  const toggleNavbar = () => {
-    setNavbarExpanded(!isNavbarExpanded);
-  };
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:5000/api/products");
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
 
-  // Logout handler
-  const logoutHandler = () => {
-    localStorage.removeItem("userInfo");
-    navigate("/login");
-  };
+    fetchProducts();
+  }, []);
+
+  const carouselImages = [
+    "/assets/buy-online-slider-template-4261dd.webp",
+    "/assets/shop-online-slider-template-4f2c60.webp",
+    "/assets/buy-online-slider-template-4261dd.webp",
+    "/assets/shop-online-slider-template-4f2c60.webp",
+    "/assets/buy-online-slider-template-4261dd.webp",
+  ];
 
   return (
     <div className="dashboard">
-      {/* Navbar */}
-      <nav className="navbar">
-        <div className="navbar-left">
-          <Link to="/" className="navbar-logo">
-            Logo
-          </Link>
-          <Link to="/cart" className="navbar-link">
-            Cart
-          </Link>
-          <Link to="/orders" className="navbar-link">
-            Orders
-          </Link>
-          <Link to="/profile" className="navbar-link">
-            Profile
-          </Link>
-        </div>
-        <div className="navbar-right">
-          <button onClick={logoutHandler} className="navbar-logout">
-            Logout
-          </button>
-        </div>
-        {/* Hamburger Menu for Mobile */}
-        <div className="hamburger" onClick={toggleNavbar}>
-          ☰
-        </div>
-      </nav>
+      <Navbar />
 
-      {/* Navbar Expanded for Mobile */}
-      {isNavbarExpanded && (
-        <div className="navbar-expanded">
-          <Link to="/" className="navbar-link">
-            Home
-          </Link>
-          <Link to="/cart" className="navbar-link">
-            Cart
-          </Link>
-          <Link to="/orders" className="navbar-link">
-            Orders
-          </Link>
-          <Link to="/profile" className="navbar-link">
-            Profile
-          </Link>
-          <button onClick={logoutHandler} className="navbar-logout">
-            Logout
-          </button>
-        </div>
-      )}
-
-      {/* Image Carousel */}
-      <div className="carousel">
-        <img
-          src="https://via.placeholder.com/1500x500?text=Image+1"
-          alt="Carousel Image 1"
-        />
-        <img
-          src="https://via.placeholder.com/1500x500?text=Image+2"
-          alt="Carousel Image 2"
-        />
-        <img
-          src="https://via.placeholder.com/1500x500?text=Image+3"
-          alt="Carousel Image 3"
-        />
-        <img
-          src="https://via.placeholder.com/1500x500?text=Image+4"
-          alt="Carousel Image 4"
-        />
-        <img
-          src="https://via.placeholder.com/1500x500?text=Image+5"
-          alt="Carousel Image 5"
-        />
+      {/* Swiper Carousel */}
+      <div className="carousel-container">
+        <Swiper
+          modules={[Navigation, Autoplay]}
+          navigation={true}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          loop={true}
+          spaceBetween={30}
+          slidesPerView={1}
+          className="carousel-swiper"
+        >
+          {carouselImages.map((img, idx) => (
+            <SwiperSlide key={idx}>
+              <img
+                src={img}
+                alt={`Slide ${idx + 1}`}
+                className="carousel-img"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
-
+      <h1>Top Deals</h1>
       {/* Product Cards */}
       <div className="product-cards">
-        <div className="product-card">
-          <img src="https://via.placeholder.com/300x300" alt="Product" />
-          <h3>Product Name</h3>
-          <p>Product Description</p>
-          <button>Add to Cart</button>
-        </div>
+        {products.map((product) => (
+          <div className="product-card" key={product._id}>
+            <img src={product.image} alt={product.name} />
+            <h3>{product.name}</h3>
+            <p>{product.description}</p>
+            <p>₹{product.price}</p>
+            <p className="category">Category: {product.category}</p>
+            <button>Add to Cart</button>
+          </div>
+        ))}
       </div>
     </div>
   );

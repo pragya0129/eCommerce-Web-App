@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
+const generateToken = require("../utils/generateToken");
 
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
@@ -33,6 +34,7 @@ const loginUser = async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      token: generateToken(user._id), // <--- Add token here
       message: "Login successful",
     });
   } else {

@@ -4,6 +4,9 @@ import SignupPage from "./pages/SignupPage";
 import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage";
+import AdminPanel from "./pages/AdminPanel";
+import CategoriesPage from "./pages/CategoriesPage";
+import ProductsByCategory from "./pages/ProductsByCategory";
 
 function App() {
   return (
@@ -20,6 +23,12 @@ function App() {
           }
         />
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/adminpanel" element={<AdminPanel />} />
+        <Route path="/categories" element={<CategoriesPage />} />
+        <Route
+          path="//products/category/:categoryName"
+          element={<ProductsByCategory />}
+        />
       </Routes>
     </Router>
   );

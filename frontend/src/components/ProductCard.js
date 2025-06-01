@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
+import ProductModal from "./ProductModal";
 
 const ProductCard = ({ product }) => {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleClick = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
+
   return (
-    <div style={styles.card}>
-      <img src={product.image} alt={product.title} style={styles.image} />
-      <h3>{product.title}</h3>
-      <p>₹{product.price}</p>
-      <p style={{ fontSize: "0.9rem" }}>
-        {product.description.slice(0, 80)}...
-      </p>
-    </div>
+    <>
+      <div style={styles.card} onClick={handleClick}>
+        <img src={product.image} alt={product.name} style={styles.image} />
+        <h3>{product.name}</h3>
+        <p>₹{product.price}</p>
+      </div>
+
+      {showModal && <ProductModal product={product} onClose={handleClose} />}
+    </>
   );
 };
 
@@ -20,6 +27,7 @@ const styles = {
     padding: "1rem",
     width: "250px",
     backgroundColor: "#f9f9f9",
+    cursor: "pointer",
   },
   image: {
     width: "100%",
