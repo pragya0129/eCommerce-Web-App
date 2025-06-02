@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import ProductCard from "../components/ProductCard";
 
 const DashboardPage = () => {
   const [products, setProducts] = useState([]);
@@ -63,14 +64,7 @@ const DashboardPage = () => {
       {/* Product Cards */}
       <div className="product-cards">
         {products.map((product) => (
-          <div className="product-card" key={product._id}>
-            <img src={product.image} alt={product.name} />
-            <h3>{product.name}</h3>
-            <p>{product.description}</p>
-            <p>₹{product.price}</p>
-            <p className="category">Category: {product.category}</p>
-            <button>Add to Cart</button>
-          </div>
+          <ProductCard product={product} />
         ))}
       </div>
     </div>

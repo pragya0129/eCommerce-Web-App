@@ -12,18 +12,40 @@ const ProductsByCategory = () => {
   const [sortOrder, setSortOrder] = useState("");
   const [maxPrice, setMaxPrice] = useState(5000);
   const [selectedMaxPrice, setSelectedMaxPrice] = useState(5000);
-  const [priceSliderValue, setPriceSliderValue] = useState(5000); // for live slider display
+  const [priceSliderValue, setPriceSliderValue] = useState(5000);
 
   useEffect(() => {
     const fetchProductsByCategory = async () => {
       try {
-        const { data } = await axios.get("http://localhost:5000/api/products");
-        const filtered = data.filter(
-          (product) => product.category === categoryName
+        const [productsRes, discountsRes] = await Promise.all([
+          axios.get("http://localhost:5000/api/products"),
+          axios.get("http://localhost:5000/api/discounts/"),
+        ]);
+
+        const allProducts = productsRes.data;
+        const allDiscounts = discountsRes.data;
+        console.log(allDiscounts);
+
+        // Get current category discount
+        const categoryDiscount = allDiscounts.find(
+          (d) => d.category === categoryName
         );
+        const discountPercent = categoryDiscount?.discount || 0;
+        console.log(discountPercent);
+
+        // Filter and apply discount
+        const filtered = allProducts
+          .filter((product) => product.category === categoryName)
+          .map((product) => {
+            const discount = (product.price * discountPercent) / 100;
+            const discountedPrice = Math.round(product.price - discount);
+            return { ...product, discountedPrice };
+          });
+
         setProducts(filtered);
         setFilteredProducts(filtered);
-        const max = Math.max(...filtered.map((p) => p.price), 5000);
+
+        const max = Math.max(...filtered.map((p) => p.discountedPrice), 5000);
         setMaxPrice(max);
         setSelectedMaxPrice(max);
         setPriceSliderValue(max);
@@ -38,15 +60,15 @@ const ProductsByCategory = () => {
   useEffect(() => {
     let updated = [...products];
 
-    // Sort logic
+    // Sort by discountedPrice
     if (sortOrder === "lowToHigh") {
-      updated.sort((a, b) => a.price - b.price);
+      updated.sort((a, b) => a.discountedPrice - b.discountedPrice);
     } else if (sortOrder === "highToLow") {
-      updated.sort((a, b) => b.price - a.price);
+      updated.sort((a, b) => b.discountedPrice - a.discountedPrice);
     }
 
-    // Filter logic
-    updated = updated.filter((p) => p.price <= selectedMaxPrice);
+    // Filter by discountedPrice
+    updated = updated.filter((p) => p.discountedPrice <= selectedMaxPrice);
 
     setFilteredProducts(updated);
   }, [sortOrder, selectedMaxPrice, products]);
@@ -60,7 +82,6 @@ const ProductsByCategory = () => {
       <Navbar />
       <h2>Products in "{categoryName}"</h2>
       <div className="products-content">
-        {/* Sidebar */}
         <div className="filter-sidebar">
           <h4>Sort By</h4>
           <label>
@@ -98,7 +119,6 @@ const ProductsByCategory = () => {
           </div>
         </div>
 
-        {/* Products Section */}
         <div className="product-cards">
           {filteredProducts.length === 0 ? (
             <p>No products found in this range.</p>

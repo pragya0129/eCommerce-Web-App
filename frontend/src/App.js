@@ -7,6 +7,7 @@ import DashboardPage from "./pages/DashboardPage";
 import AdminPanel from "./pages/AdminPanel";
 import CategoriesPage from "./pages/CategoriesPage";
 import ProductsByCategory from "./pages/ProductsByCategory";
+import ProductDetailsPage from "./pages/ProductDetailsPage";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/adminpanel" element={<AdminPanel />} />
         <Route path="/categories" element={<CategoriesPage />} />
+        <Route path="/product/:id" element={<ProductDetailsPage />} />
         <Route
           path="//products/category/:categoryName"
           element={<ProductsByCategory />}

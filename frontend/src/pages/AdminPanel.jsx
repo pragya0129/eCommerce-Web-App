@@ -14,6 +14,22 @@ const AdminPanel = () => {
     category: "",
   });
 
+  const [showDiscountModal, setShowDiscountModal] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [discountValue, setDiscountValue] = useState("");
+
+  const fetchCategories = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:5000/api/products/categories/all"
+      );
+      setCategories(data);
+    } catch (err) {
+      setMessage("❌ Failed to fetch categories");
+    }
+  };
+
   const [message, setMessage] = useState("");
 
   const handleInputChange = (e) => {
@@ -62,6 +78,39 @@ const AdminPanel = () => {
     setShowDeleteModal(false);
   };
 
+  const handleSaveDiscount = async () => {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.post(
+        "http://localhost:5000/api/discounts",
+        {
+          category: selectedCategory,
+          discount: discountValue,
+        },
+        config
+      );
+
+      setMessage("✅ " + data.message);
+    } catch (error) {
+      setMessage(
+        "❌ Failed to set discount: " + error.response?.data?.message ||
+          error.message
+      );
+    } finally {
+      setShowDiscountModal(false);
+      setSelectedCategory("");
+      setDiscountValue("");
+      setTimeout(() => setMessage(""), 3000);
+    }
+  };
+
   return (
     <div className="admin-panel">
       <Navbar />
@@ -78,6 +127,15 @@ const AdminPanel = () => {
           className="admin-btn delete"
         >
           Delete Product
+        </button>
+        <button
+          onClick={() => {
+            fetchCategories();
+            setShowDiscountModal(true);
+          }}
+          className="admin-btn discount"
+        >
+          Set Discount
         </button>
       </div>
 
@@ -143,6 +201,40 @@ const AdminPanel = () => {
             <div className="modal-buttons">
               <button onClick={handleDeleteProduct}>Delete</button>
               <button onClick={() => setShowDeleteModal(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDiscountModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Set Category Discount</h3>
+
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat, idx) => (
+                <option key={idx} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+
+            <input
+              type="number"
+              placeholder="Enter Discount %"
+              value={discountValue}
+              onChange={(e) => setDiscountValue(e.target.value)}
+            />
+
+            <div className="modal-buttons">
+              <button onClick={handleSaveDiscount}>Save</button>
+              <button onClick={() => setShowDiscountModal(false)}>
+                Cancel
+              </button>
             </div>
           </div>
         </div>
